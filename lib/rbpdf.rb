@@ -14033,7 +14033,7 @@ protected
       # unordered types
     when 'none'
     when 'disc', 'circle'
-      fill = 'F' if listtype == 'disc'
+      fill = +'F' if listtype == 'disc'
       fill << 'D'
       r = size / 6.0
       lspace += 2 * r
