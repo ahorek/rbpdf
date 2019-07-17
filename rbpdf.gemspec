@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: true
 # Copyright (c) 2011-2017 NAITOH Jun
 # Released under the MIT license
 # http://www.opensource.org/licenses/MIT
@@ -30,6 +31,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
+
+  # spec.required_ruby_version = '>= 2.3.0'
 
   if RUBY_VERSION == "1.8.7"
     spec.add_runtime_dependency "htmlentities", "= 4.3.1"

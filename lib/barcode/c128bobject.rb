@@ -1,4 +1,4 @@
-
+﻿# frozen_string_literal: true
 #============================================================+
 # File name   : c128bobject.rb
 # Begin       : 2002-07-31

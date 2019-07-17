@@ -1,4 +1,5 @@
 # coding: ASCII-8BIT
+# frozen_string_literal: true
 #============================================================+
 # File name   : rbpdf.rb
 # Begin       : 2002-08-03
@@ -436,7 +437,7 @@ class RBPDF
     if @diskcache
       @buffer ||= nil
     else
-      @buffer ||= ''
+      @buffer ||= +''
     end
     @pages ||= []
     @prev_pages ||= []
@@ -2636,7 +2637,7 @@ class RBPDF
   # [@since 1.5]
   # [@see] SetFont()
   #
-  def AddFont(family, style='', fontfile='', subset=nil)
+  def AddFont(family, style=+'', fontfile=+'', subset=nil)
     if empty_string(family)
       if !empty_string(@font_family)
         family = @font_family
@@ -2651,11 +2652,11 @@ class RBPDF
       family = 'helvetica';
     end
     if (family == "symbol") or (family == "zapfdingbats")
-      style = ''
+      style = +''
     end
 
     tempstyle = style.upcase
-    style = ''
+    style = +''
     # underline
     if tempstyle.index('U') != nil
       @underline = true
@@ -3457,7 +3458,7 @@ class RBPDF
   #
   def getCellCode(w, h=0, txt='', border=0, ln=0, align='', fill=0, link=nil, stretch=0, ignore_min_height=false, calign='T', valign='M')
     txt = '' if txt.nil?
-    rs = "" # string to be returned
+    rs = +"" # string to be returned
     txt = removeSHY(txt)
     if !ignore_min_height
       min_cell_height = @font_size * @cell_height_ratio
@@ -3539,7 +3540,7 @@ class RBPDF
         w = @w - @r_margin - x
       end
     end
-    s = '';
+    s = +'';
     # fill and borders
     if (fill == 1) or (border.to_i == 1)
       if (fill == 1)
@@ -4083,7 +4084,7 @@ class RBPDF
       return 1
     end
     return 0 if border == 0
-    cborder = ''
+    cborder = +''
     case position
     when 'start'
       if border == 1
@@ -4678,7 +4679,7 @@ class RBPDF
   # [@access public]
   #
   def UTF8ArrSubString(strarr, start=0, last=strarr.size)
-    string = ""
+    string = "".dup
     start.upto(last - 1) do |i|
       string << unichr(strarr[i])
     end
@@ -4696,7 +4697,7 @@ class RBPDF
   # [@since 4.5.037 (2009-04-07)]
   #
   def UniArrSubString(uniarr, start=0, last=uniarr.length)
-    string = ''
+    string = +''
     start.upto(last - 1) do |i|
       string << uniarr[i]
     end
@@ -5213,7 +5214,7 @@ class RBPDF
     #Scan chunks looking for palette, transparency and image data
     pal='';
     trns='';
-    data='';
+    data=+'';
     begin
       n=freadint(f);
       type=f.read(4);
@@ -5786,7 +5787,7 @@ protected
       temppage = temppage.gsub(@epsmarker, '')
       #Page
       @page_obj_id[n] = newobj()
-      out = '<<'
+      out = +'<<'
       out << ' /Type /Page'
       out << ' /Parent 1 0 R'
       out << ' /LastModified ' + datestring()
@@ -5876,7 +5877,7 @@ protected
     end
     #Pages root
     @offsets[1]=@bufferlen
-    out = '1 0 obj << /Type /Pages  /Kids ['
+    out = +'1 0 obj << /Type /Pages  /Kids ['
     @page_obj_id.each { |page_obj|
       out << ' ' + page_obj.to_s + ' 0 R' unless page_obj.nil?
     }
@@ -5908,7 +5909,7 @@ protected
     unless @page_annots[n] or (@sign and @signature_data['cert_type'])
       return ''
     end
-    out = ' /Annots ['
+    out = +' /Annots ['
     if @page_annots[n]
       num_annots = @page_annots[n].length
       0.upto(num_annots - 1) do |i|
@@ -5983,7 +5984,7 @@ protected
           d = pl['h'] * @k
           rect = sprintf('%.2f %.2f %.2f %.2f', a, b, a + c, b + d)
           # create new annotation object
-          annots = '<</Type /Annot'
+          annots = +'<</Type /Annot'
           annots << ' /Subtype /' + pl['opt']['subtype']
           annots << ' /Rect [' + rect + ']'
           ft = ['Btn', 'Tx', 'Ch', 'Sig']
@@ -6772,7 +6773,7 @@ protected
       end
     }
     # build new glyf table with only used glyphs
-    glyf = ''
+    glyf = +''
     glyfSize = 0
     # create new empty indexToLoc table
     newIndexToLoc = Array.new(indexToLoc.length, 0)
@@ -6788,7 +6789,7 @@ protected
       end
     }
     # build new loca table
-    loca = ''
+    loca = +''
     if short_offset
       newIndexToLoc.each {|offset|
         loca << [offset / 2].pack('n')
@@ -6850,7 +6851,7 @@ protected
     table['glyf']['offset'] = offset
     table['glyf']['checkSum'] = getTTFtableChecksum(table['glyf']['data'], table['glyf']['length'])
     # rebuild font
-    font = ''
+    font = +''
     font << [0x10000].pack('N') # sfnt version
     numTables = table.length
     font << [numTables].pack('n') # numTables
@@ -6991,7 +6992,7 @@ protected
       end
     }
     # output data
-    w = ''
+    w = +''
     range.each_with_index {|ws, k|
       if ws and ws.uniq.length == 1
         # interval mode is more compact
@@ -7066,7 +7067,8 @@ protected
         end
         newobj()
         @font_files[file]['n'] = @n
-        out = '<</Length '+ font.length.to_s
+        out = +'<</Length '
+        out << font.length.to_s
         if compressed
           out << ' /Filter /FlateDecode'
         end
@@ -7089,7 +7091,7 @@ protected
       if (type=='core')
         # standard core font
         obj_id = newobj()
-        out = '<</Type /Font'
+        out = +'<</Type /Font'
         out << ' /Subtype /Type1'
         out << ' /BaseFont /' + name
         out << ' /Name /F' + font['i'].to_s
@@ -7105,7 +7107,7 @@ protected
       elsif (type=='Type1' || type=='TrueType')
         # additional Type1 or TrueType font
         obj_id = newobj()
-        out = '<</Type /Font'
+        out = +'<</Type /Font'
         out << ' /Subtype /' + type
         out << ' /BaseFont /' + name
         out << ' /Name /F' + font['i'].to_s
@@ -7165,7 +7167,7 @@ protected
   # [@since 1.52.0.TC005 (2005-01-05)]
   #
   def puttruetypeunicode(font)
-    fontname = ''
+    fontname = +''
     if font['subset']
       # change name for font subsetting
       subtag = sprintf('%06u', font['i'])
@@ -7176,7 +7178,7 @@ protected
     # Type0 Font
     # A composite font composed of other fonts, organized hierarchically
     obj_id = newobj()
-    out = '<</Type /Font'
+    out = +'<</Type /Font'
     out << ' /Subtype /Type0'
     out << ' /BaseFont /' + fontname + ''
     out << ' /Name /F' + font['i'].to_s
@@ -7189,7 +7191,7 @@ protected
     # CIDFontType2
     # A CIDFont whose glyph descriptions are based on TrueType font technology
     newobj();
-    out = '<</Type /Font'
+    out = +'<</Type /Font'
     out << ' /Subtype /CIDFontType2'
     out << ' /BaseFont /' + fontname
 
@@ -7210,7 +7212,7 @@ protected
     # Font descriptor
     # A font descriptor describing the CIDFont default metrics other than its glyph widths
     newobj();
-    out = '<</Type /FontDescriptor'
+    out = +'<</Type /FontDescriptor'
     out << ' /FontName /' + fontname
     font['desc'].each do |key, value|
       if value.is_a? Float
@@ -7248,7 +7250,8 @@ protected
         Error('Font file not found: ' + ctgfile)
       end
       size = File.size(fontfile)
-      out = '<</Length ' + size.to_s + ''
+      out = +'<</Length '
+      out << size.to_s
       if (fontfile[-2,2] == '.z') # check file extension
         # Decompresses data encoded using the public-domain
         # zlib/deflate compression method, reproducing the
@@ -7301,7 +7304,7 @@ protected
       longname = name
     end
     obj_id = newobj()
-    out = '<</Type /Font'
+    out = +'<</Type /Font'
     out << ' /Subtype /Type0'
     out << ' /BaseFont /' + longname
     out << ' /Name /F' + font['i'].to_s
@@ -7312,7 +7315,7 @@ protected
     out << ' >> endobj'
     out(out)
     newobj()
-    out = '<</Type /Font'
+    out = +'<</Type /Font'
     out << ' /Subtype /CIDFontType0'
     out << ' /BaseFont /' + name
     cidinfo = '/Registry ' + datastring(font['cidinfo']['Registry'])
@@ -7325,7 +7328,8 @@ protected
     out << ' >> endobj'
     out(out)
     newobj()
-    s = '<</Type /FontDescriptor /FontName /' + name
+    s = +'<</Type /FontDescriptor /FontName /'
+    s << name
     font['desc'].each {|k, v|
       if k != 'Style'
         if v.is_a? Float
@@ -7349,7 +7353,7 @@ protected
       info = getImageBuffer(file)
       newobj();
       setImageSubBuffer(file, 'n', @n)
-      out = '<</Type /XObject'
+      out = +'<</Type /XObject'
       out << ' /Subtype /Image'
       out << ' /Width ' + info['w'].to_s
       out << ' /Height ' + info['h'].to_s
@@ -7412,7 +7416,8 @@ protected
     @spot_colors.each { |name, color|
       newobj()
       @spot_colors[name]['n'] = @n
-      out = '[/Separation /' + name.gsub(' ', '#20')
+      out = +'[/Separation /'
+      out << name.gsub(' ', '#20')
       out << ' /DeviceCMYK <<'
       out << ' /Range [0 1 0 1 0 1 0 1] /C0 [0 0 0 0]'
       out << ' ' + sprintf('/C1 [%.4f %.4f %.4f %.4f] ', color['c']/100.0, color['m']/100.0, color['y']/100.0, color['k']/100.0)
@@ -7427,7 +7432,7 @@ protected
   # [@access protected]
   #
   def putresourcedict()
-    out = '2 0 obj'
+    out = +'2 0 obj'
     out << ' << /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]'
     out << ' /Font <<'
     @fontkeys.each do |fontkey|
@@ -7516,7 +7521,7 @@ protected
   #
   def putinfo()
     newobj()
-    out = '<<'
+    out = +'<<'
     if !empty_string(@title)
       # The document's title.
       out << ' /Title ' + textstring(@title)
@@ -7560,7 +7565,7 @@ protected
   #
   def putcatalog()
     newobj()
-    out = '<< /Type /Catalog'
+    out = +'<< /Type /Catalog'
     out << ' /Pages 1 0 R'
     if (@zoom_mode=='fullpage')
       out << ' /OpenAction [3 0 R /Fit]'
@@ -7611,7 +7616,7 @@ protected
   # [@access protected]
   #
   def putviewerpreferences()
-    out = '/ViewerPreferences <<'
+    out = +'/ViewerPreferences <<'
     if @rtl
       out << ' /Direction /R2L'
     else
@@ -7665,7 +7670,7 @@ protected
       end
     end
     if @viewer_preferences['PrintPageRange']
-      print_page_range_num = ''
+      print_page_range_num = +''
       @viewer_preferences['PrintPageRange'].each { |v|
         print_page_range_num << ' ' + (v - 1).to_s + ''
       }
@@ -7684,7 +7689,7 @@ protected
   # [@access protected]
   #
   def puttrailer()
-    out = 'trailer <<'
+    out = +'trailer <<'
     out << ' /Size ' + (@n+1).to_s
     out << ' /Root ' + @n.to_s + ' 0 R'
     out << ' /Info ' + (@n-1).to_s + ' 0 R'
@@ -8046,7 +8051,7 @@ protected
   # [@access protected]
   #
   def out(s)
-    s.force_encoding('ASCII-8BIT') if s.respond_to?(:force_encoding)
+    s = s.dup.force_encoding('ASCII-8BIT') if s.respond_to?(:force_encoding)
     if (@state==2)
       if !@in_footer and !@footerlen[@page].nil? and (@footerlen[@page] > 0)
         # puts data before page footer
@@ -8220,7 +8225,7 @@ protected
     if !@is_unicode
       return str # string is not in unicode
     end
-    outstr = '' # string to be returned
+    outstr = +'' # string to be returned
     unicode = UTF8StringToArray(str) # array containing UTF-8 unicode values
     unicode.each {|char|
       if char < 256
@@ -8304,7 +8309,7 @@ protected
   # [@see] UTF8ToUTF16BE()
   #
   def arrUTF8ToUTF16BE(unicode, setbom=true)
-    outstr = ""; # string to be returned
+    outstr = +""; # string to be returned
     if (setbom)
       outstr << "\xFE\xFF"; # Byte Order Mark (BOM)
     end
@@ -8793,14 +8798,13 @@ public
     end
     if !style['dash'].nil?
       dash = style['dash']
-      dash_string = ''
+      dash_string = +''
       if dash != 0 and dash != ''
         if dash =~ /^.+,/
           tab = dash.split(',')
         else
           tab = [dash]
         end
-        dash_string = ''
         tab.each_with_index { |v, i|
           if i != 0
             dash_string << ' '
@@ -10255,7 +10259,8 @@ public
       title = title.gsub(/[\r]+/mi, '')
       title = title.gsub(/[\n]+/mi, "\n")
       title = title.strip.gsub(/<[^>]+>/, '')
-      out = '<</Title ' + textstring(title)
+      out = +'<</Title '
+      out << textstring(title)
       out << ' /Parent ' + (n + o[:parent]).to_s + ' 0 R'
       out << ' /Prev ' + (n + o[:prev]).to_s + ' 0 R' if !o[:prev].nil?
       out << ' /Next ' + (n + o[:next]).to_s + ' 0 R' if !o[:next].nil?
@@ -10530,7 +10535,7 @@ public
       newobj()
       @extgstates[i] ||= {}
       @extgstates[i]['n'] = @n
-      out = '<< /Type /ExtGState'
+      out = +'<< /Type /ExtGState'
       if @extgstates[i]['parms']
         @extgstates[i]['parms'].each {|k, v|
           if v.is_a? Float
@@ -11127,7 +11132,7 @@ protected
   # [@since 5.1.000 (2010-05-25)]
   #
   def getTagStyleFromCSS(dom, key, css)
-    tagstyle = '' # style to be returned
+    tagstyle = +'' # style to be returned
     # get all styles that apply
     css.each { |selector, style|
       # remove specificity
@@ -11381,7 +11386,7 @@ protected
             dom[grandparent]['cols'] = dom[(dom[key]['parent'])]['cols']
           end
           if (dom[key]['value'] == 'td') or (dom[key]['value'] == 'th')
-            dom[(dom[key]['parent'])]['content'] = ''
+            dom[(dom[key]['parent'])]['content'] = +''
             (dom[key]['parent'] + 1).upto(key - 1) do |i|
               dom[(dom[key]['parent'])]['content'] << a[dom[i]['elkey']]
             end
@@ -12844,7 +12849,7 @@ public
           len1 = dom[key]['value'].length
           lsp = len1 - dom[key]['value'].lstrip.length
           rsp = len1 - dom[key]['value'].rstrip.length
-          tmpstr = ''
+          tmpstr = +''
           if rsp > 0
             tmpstr << dom[key]['value'][-rsp..-1]
           end
@@ -14225,7 +14230,7 @@ protected
   #
   def readDiskCache(filename)
     filename = filename.path
-    data = ''
+    data = +''
     open( filename,'rb') do |f|
       data << f.read()
     end
@@ -14283,7 +14288,7 @@ protected
       writeDiskCache(@pages[page], data, append)
     else
       if append
-        @pages[page] << data
+        @pages[page] += data
       else
         @pages[page] = data
       end
